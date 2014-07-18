@@ -7,12 +7,12 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace BlueX\GeoHash\Source;
+namespace BlueX\Geo;
 
 /**
  * A collection of geohashes or geohash ranges.
  */
-class GeoHashSet
+class HashSet
 {
     private $geohashes = array();
 
@@ -34,7 +34,7 @@ class GeoHashSet
     }
 
     /**
-     * @param \BlueX\GeoHash\Source\GeoHashSet $set
+     * @param \BlueX\Geo\HashSet $set
      */
     public function addSet($set)
     {
@@ -46,11 +46,11 @@ class GeoHashSet
     /**
      * Returns true if the point falls within one of the hash boxes.
      *
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
+     * @param \BlueX\Geo\Point $point
      *
      * @return boolean
      */
-    public function contains(GeoPoint $point)
+    public function contains(Point $point)
     {
         foreach ($this->geohashes as $geohash) {
             if (is_array($geohash)) {
@@ -59,13 +59,13 @@ class GeoHashSet
                 $test  = $first;
 
                 while ($test <= $last && $test) {
-                    if (GeoHash::contains($test, $point)) {
+                    if (Hash::contains($test, $point)) {
                         return true;
                     }
-                    $test = GeoHash::increment($test);
+                    $test = Hash::increment($test);
                 }
             } else {
-                if (GeoHash::contains($geohash, $point)) {
+                if (Hash::contains($geohash, $point)) {
                     return true;
                 }
             }

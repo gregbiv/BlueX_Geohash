@@ -7,18 +7,16 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace GeoHash\Tests;
-
-use BlueX\GeoHash\Source\GeoHash;
-use BlueX\GeoHash\Source\GeoPoint;
+use BlueX\Geo\Hash;
+use BlueX\Geo\Point;
 
 /**
  * Main class with tests.
  */
-abstract class Base extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * The digits used by geohash to form the base-32 number system.
+     * The digits used by Hash to form the base-32 number system.
      * @return array
      */
     public static function digitProvider()
@@ -62,44 +60,44 @@ abstract class Base extends \PHPUnit_Framework_TestCase
     /**
      * Tests for testing the encoding.
      * The default precision is 8 characters.
-     * @return array of arrays(latitude, longitude, precision, geohash)
+     * @return array of arrays(latitude, longitude, precision, Hash)
      */
     public static function encodingProvider()
     {
-        // test 12 character geohashes, edge cases and internal places
+        // test 12 character Hashes, edge cases and internal places
         $encodings = [
-            [new GeoPoint(0, 0), 12, 's00000000000'],
-            [new GeoPoint(45, 90), 12, 'y00000000000'],
-            [new GeoPoint(45, -90), 12, 'f00000000000'],
-            [new GeoPoint(-45, 90), 12, 'q00000000000'],
-            [new GeoPoint(-45, -90), 12, '600000000000'],
-            [new GeoPoint(90, 180), 12, 'zzzzzzzzzzzz'],
-            [new GeoPoint(90, -180), 12, 'bpbpbpbpbpbp'],
-            [new GeoPoint(-90, 180), 12, 'pbpbpbpbpbpb'],
-            [new GeoPoint(-90, -180), 12, '000000000000'],
-            [new GeoPoint(42.350072, -71.047656), 12, 'drt2zm8ej9eg'],
-            [new GeoPoint(38.898632, -77.036541), 12, 'dqcjqcr8yqxd'],
-            [new GeoPoint(-23.442503, -58.443832), 12, '6ey6wh6t808q'],
-            [new GeoPoint(47.516231, 14.550072), 12, 'u26q7454172n'],
-            [new GeoPoint(19.856270, 102.495496), 12, 'w78buqdznjj0'],
+            [new Point(0, 0), 12, 's00000000000'],
+            [new Point(45, 90), 12, 'y00000000000'],
+            [new Point(45, -90), 12, 'f00000000000'],
+            [new Point(-45, 90), 12, 'q00000000000'],
+            [new Point(-45, -90), 12, '600000000000'],
+            [new Point(90, 180), 12, 'zzzzzzzzzzzz'],
+            [new Point(90, -180), 12, 'bpbpbpbpbpbp'],
+            [new Point(-90, 180), 12, 'pbpbpbpbpbpb'],
+            [new Point(-90, -180), 12, '000000000000'],
+            [new Point(42.350072, -71.047656), 12, 'drt2zm8ej9eg'],
+            [new Point(38.898632, -77.036541), 12, 'dqcjqcr8yqxd'],
+            [new Point(-23.442503, -58.443832), 12, '6ey6wh6t808q'],
+            [new Point(47.516231, 14.550072), 12, 'u26q7454172n'],
+            [new Point(19.856270, 102.495496), 12, 'w78buqdznjj0'],
         ];
         foreach ($encodings as $test) {
-            $encodings[] = [$test[0], 1, substr($test[2], 0, 1)]; // test single character geohashes
-            $encodings[] = [$test[0], 2, substr($test[2], 0, 2)]; // test two character geohashes
-            $encodings[] = [$test[0], 5, substr($test[2], 0, 5)]; // test five character geohashes
-            $encodings[] = [$test[0], null, substr($test[2], 0, 8)]; // test default eight character geohashes
+            $encodings[] = [$test[0], 1, substr($test[2], 0, 1)]; // test single character Hashes
+            $encodings[] = [$test[0], 2, substr($test[2], 0, 2)]; // test two character Hashes
+            $encodings[] = [$test[0], 5, substr($test[2], 0, 5)]; // test five character Hashes
+            $encodings[] = [$test[0], null, substr($test[2], 0, 8)]; // test default eight character Hashes
         }
 
         return $encodings;
     }
 
     /**
-     * A bunch of geohashes for testing neighbors, contains and other stuff.
+     * A bunch of Hashes for testing neighbors, contains and other stuff.
      * @return array
      */
-    public static function geohashProvider()
+    public static function HashProvider()
     {
-        $geohashes = [
+        $Hashes = [
             ['s00000000000'],
             ['y00000000000'],
             ['f00000000000'],
@@ -117,18 +115,18 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         ];
         // add some random tests
         for ($i = 0; $i < 3; $i++) {
-            $geohashes[] = [
-                GeoHash::encode(new GeoPoint(mt_rand(-90000, 90000) / 1000, mt_rand(-180000, 180000) / 1000, 12))
+            $Hashes[] = [
+                Hash::encode(new Point(mt_rand(-90000, 90000) / 1000, mt_rand(-180000, 180000) / 1000, 12))
             ];
         }
-        foreach ($geohashes as $test) {
-            $geohashes[] = [substr($test[0], 0, 1)]; // test single character geohashes
-            $geohashes[] = [substr($test[0], 0, 2)]; // test two character geohashes
-            $geohashes[] = [substr($test[0], 0, 5)]; // test five character geohashes
-            $geohashes[] = [substr($test[0], 0, 8)]; // test eight character geohashes
+        foreach ($Hashes as $test) {
+            $Hashes[] = [substr($test[0], 0, 1)]; // test single character Hashes
+            $Hashes[] = [substr($test[0], 0, 2)]; // test two character Hashes
+            $Hashes[] = [substr($test[0], 0, 5)]; // test five character Hashes
+            $Hashes[] = [substr($test[0], 0, 8)]; // test eight character Hashes
         }
 
-        return $geohashes;
+        return $Hashes;
     }
 
     /**

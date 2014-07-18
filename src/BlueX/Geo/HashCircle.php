@@ -1,5 +1,5 @@
 <?php
-namespace BlueX\GeoHash\Source;
+namespace BlueX\Geo;
 
 /**
  * Computes geohash sets in widening circles around a center point.
@@ -8,7 +8,7 @@ namespace BlueX\GeoHash\Source;
  *       Some serious dancing around the math has to be done for us to effectively use geohashes near the poles.
  *       Perhaps another location paradigm should be used?  I.e. It may be better to just use a latitude, longitude sort.
  */
-class GeoHashCircle
+class HashCircle
 {
     /**
      * @var string
@@ -21,17 +21,17 @@ class GeoHashCircle
     private $precision;
 
     /**
-     * @var \BlueX\GeoHash\Source\GeoBox
+     * @var \BlueX\Geo\Box
      */
     private $geobox;
 
     /**
-     * @var \BlueX\GeoHash\Source\GeoPoint
+     * @var \BlueX\Geo\Point
      */
     private $center;
 
     /**
-     * @var \BlueX\GeoHash\Source\GeoHashSet
+     * @var \BlueX\Geo\HashSet
      */
     private $geohash_set;
 
@@ -50,11 +50,11 @@ class GeoHashCircle
         $this->center_geohash = $center_geohash;
         $this->precision      = strlen($center_geohash);
 
-        $this->geobox = GeoHash::decodeBox($center_geohash);
+        $this->geobox = Hash::decodeBox($center_geohash);
         $this->center = $this->geobox->center();
 
         // Begin with a set including only the box itself
-        $this->geohash_set = new GeoHashSet();
+        $this->geohash_set = new HashSet();
         $this->geohash_set->add($center_geohash);
 
         // The distance to the longitude will always be less than the distance to the latitude (I think)
@@ -62,13 +62,13 @@ class GeoHashCircle
     }
 
     /**
-     * Returns the distance from the center point of this circle to a geopoint.
+     * Returns the distance from the center point of this circle to a Point.
      *
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
+     * @param \BlueX\Geo\Point $point
      *
      * @return float distance in kilometers
      */
-    public function distanceToPoint(GeoPoint $point)
+    public function distanceToPoint(Point $point)
     {
         return $this->center->distanceToPoint($point);
     }
@@ -86,7 +86,7 @@ class GeoHashCircle
     /**
      * TODO: Should this return true if the point is inside the geohash set or the circle?
      *
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
+     * @param \BlueX\Geo\Point $point
      *
      * @return boolean
      */
@@ -112,47 +112,47 @@ class GeoHashCircle
 
         // shrink the geohash, grow the box
         $center = substr($this->center_geohash, 0, $this->precision);
-        $box    = GeoHash::decodeBox($center);
+        $box    = Hash::decodeBox($center);
         $dlat   = $box->north - $box->south;
         $dlon   = $box->east - $box->west;
 
-        $set = new GeoHashSet();
+        $set = new HashSet();
         $set->add($center);
 
-        $quadrant = GeoHash::quadrant($this->center_geohash, $this->precision);
-        if ($quadrant == GeoHash::NORTHEAST || $quadrant == GeoHash::NORTHWEST) {
+        $quadrant = Hash::quadrant($this->center_geohash, $this->precision);
+        if ($quadrant == Hash::NORTHEAST || $quadrant == Hash::NORTHWEST) {
             // north side
-            $NORTH = GeoHash::neighbor($center, GeoHash::NORTH);
+            $NORTH = Hash::neighbor($center, Hash::NORTH);
             if ($NORTH) {
-                $set->addSet(GeoHash::halve($NORTH, GeoHash::SOUTH));
-                if ($quadrant == GeoHash::NORTHEAST) {
-                    $set->addSet(GeoHash::quarter(GeoHash::neighbor($NORTH, GeoHash::EAST), GeoHash::SOUTHWEST));
+                $set->addSet(Hash::halve($NORTH, Hash::SOUTH));
+                if ($quadrant == Hash::NORTHEAST) {
+                    $set->addSet(Hash::quarter(Hash::neighbor($NORTH, Hash::EAST), Hash::SOUTHWEST));
                 } else { // northwest
-                    $set->addSet(GeoHash::quarter(GeoHash::neighbor($NORTH, GeoHash::WEST), GeoHash::SOUTHEAST));
+                    $set->addSet(Hash::quarter(Hash::neighbor($NORTH, Hash::WEST), Hash::SOUTHEAST));
                 }
                 $box->north += $dlat / 2;
             }
         } else {
             // south side
-            $south = GeoHash::neighbor($center, GeoHash::SOUTH);
+            $south = Hash::neighbor($center, Hash::SOUTH);
             if ($south) {
-                $set->addSet(GeoHash::halve($south, GeoHash::NORTH));
-                if ($quadrant == GeoHash::SOUTHEAST) {
-                    $set->addSet(GeoHash::quarter(GeoHash::neighbor($south, GeoHash::EAST), GeoHash::NORTHWEST));
+                $set->addSet(Hash::halve($south, Hash::NORTH));
+                if ($quadrant == Hash::SOUTHEAST) {
+                    $set->addSet(Hash::quarter(Hash::neighbor($south, Hash::EAST), Hash::NORTHWEST));
                 } else { // southwest
-                    $set->addSet(GeoHash::quarter(GeoHash::neighbor($south, GeoHash::WEST), GeoHash::NORTHEAST));
+                    $set->addSet(Hash::quarter(Hash::neighbor($south, Hash::WEST), Hash::NORTHEAST));
                 }
                 $box->south -= $dlat / 2;
             }
         }
 
-        if ($quadrant == GeoHash::NORTHEAST || $quadrant == GeoHash::SOUTHEAST) {
+        if ($quadrant == Hash::NORTHEAST || $quadrant == Hash::SOUTHEAST) {
             // east side
-            $set->addSet(GeoHash::halve(GeoHash::neighbor($center, GeoHash::EAST), GeoHash::WEST));
+            $set->addSet(Hash::halve(Hash::neighbor($center, Hash::EAST), Hash::WEST));
             $box->east += $dlon / 2;
         } else {
             // west side
-            $set->addSet(GeoHash::halve(GeoHash::neighbor($center, GeoHash::WEST), GeoHash::EAST));
+            $set->addSet(Hash::halve(Hash::neighbor($center, Hash::WEST), Hash::EAST));
             $box->west -= $dlon / 2;
         }
 

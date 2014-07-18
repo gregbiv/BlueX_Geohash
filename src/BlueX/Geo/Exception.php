@@ -7,7 +7,7 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace GeoHash;
+namespace BlueX\Geo;
 
 /**
  * Base exception.

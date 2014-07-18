@@ -7,7 +7,7 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace BlueX\GeoHash\Source;
+namespace BlueX\Geo;
 
 /**
  * A location on the earth denoted by latitude and longitude.
@@ -18,7 +18,7 @@ namespace BlueX\GeoHash\Source;
  * or for our purposes 0.   The longitudes proceed west meeting the international
  * date line at -180, and east meeting the same from the other direction at +180.
  */
-class GeoPoint
+class Point
 {
     const EARTH_RADIUS = 6371; // mean radius in km
 
@@ -43,22 +43,22 @@ class GeoPoint
     }
 
     /**
-     * Convenience method to convert this GeoPoint to a GeoPoint.
+     * Convenience method to convert this Point to a Point.
      * @see geohash::encode
      *
      * @param int $precision
      *
-     * @return \BlueX\GeoHash\Source\GeoHash
+     * @return \BlueX\Geo\Hash
      */
     public function geohash($precision = 8)
     {
-        return GeoHash::encode($this, $precision);
+        return Hash::encode($this, $precision);
     }
 
     /**
-     * Returns the distance between two geopoints in kilometers.
+     * Returns the distance between two Points in kilometers.
      *
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
+     * @param \BlueX\Geo\Point $point
      *
      * @return float distance in kilometers
      */
@@ -83,7 +83,7 @@ class GeoPoint
      */
     public function distanceToLatitude($latitude)
     {
-        return $this->distanceToPoint(new GeoPoint($latitude, $this->longitude));
+        return $this->distanceToPoint(new Point($latitude, $this->longitude));
     }
 
     /**
@@ -119,7 +119,7 @@ class GeoPoint
             );
         }
 
-        $point3 = new GeoPoint(rad2deg($lat3), rad2deg($lon3));
+        $point3 = new Point(rad2deg($lat3), rad2deg($lon3));
 
         return $this->distanceToPoint($point3);
     }

@@ -7,9 +7,7 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace BlueX\GeoHash\Source;
-
-use GeoHash\Exception;
+namespace BlueX\Geo;
 
 /**
  * A geohash is a Z-order, or Morton curve, filling the earth's longitudes and latitudes
@@ -20,7 +18,7 @@ use GeoHash\Exception;
  * http://en.wikipedia.org/wiki/Geohash
  * http://en.wikipedia.org/wiki/Z-order_(curve)
  */
-class GeoHash
+class Hash
 {
     const ENCODING = '0123456789bcdefghjkmnpqrstuvwxyz';
 
@@ -73,15 +71,15 @@ class GeoHash
     }
 
     /**
-     * Calculate the geohash for a GeoPoint to a given precision.
+     * Calculate the geohash for a Point to a given precision.
      * The precision is measured in geohash characters.
      *
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
-     * @param integer                  $precision
+     * @param \BlueX\Geo\Point $point
+     * @param integer          $precision
      *
      * @return string
      */
-    public static function encode(GeoPoint $point, $precision = 8)
+    public static function encode(Point $point, $precision = 8)
     {
         $maxLongitude = 180;
         $minLongitude = -180;
@@ -132,12 +130,12 @@ class GeoHash
      *
      * @param string $hash
      *
-     * @return \BlueX\GeoHash\Source\GeoBox
+     * @return \BlueX\Geo\Box
      */
     public static function decodeBox($hash)
     {
-        $northeast = new GeoPoint(90, 180);
-        $southwest = new GeoPoint(-90, -180);
+        $northeast = new Point(90, 180);
+        $southwest = new Point(-90, -180);
 
         $count        = strlen($hash);
         $longitudeBit = true;
@@ -171,15 +169,15 @@ class GeoHash
             }
         }
 
-        return new GeoBox($northeast, $southwest);
+        return new Box($northeast, $southwest);
     }
 
     /**
-     * Returns the GeoPoint at the center of the geohash box.
+     * Returns the Point at the center of the geohash box.
      *
      * @param string $hash
      *
-     * @return GeoPoint
+     * @return Point
      */
     public static function decode($hash)
     {
@@ -277,14 +275,14 @@ class GeoHash
     }
 
     /**
-     * Returns true if the GeoPoint lies within the hash region.
+     * Returns true if the Point lies within the hash region.
      *
-     * @param string                   $hash
-     * @param \BlueX\GeoHash\Source\GeoPoint $point
+     * @param string           $hash
+     * @param \BlueX\Geo\Point $point
      *
      * @return boolean
      */
-    public static function contains($hash, GeoPoint $point)
+    public static function contains($hash, Point $point)
     {
         $box = self::decodeBox($hash);
 
@@ -303,7 +301,7 @@ class GeoHash
      *      'drt2zm8h1t3v' is in the northeast quadrant of 'drt2zm8h1t3'
      *      '9345' is northwest on the globe
      *
-     * @param string  $hash geohash
+     * @param string  $hash      geohash
      * @param integer $precision
      *
      * @return string self::NORTHWEST, self::NORTHEAST, self::SOUTHWEST or self::SOUTHEAST
@@ -315,7 +313,7 @@ class GeoHash
         }
 
         $odd      = $precision % 2;
-        $quadrant = (int)(self::decodeDigit($hash[$precision]) / 8);
+        $quadrant = (int) (self::decodeDigit($hash[$precision]) / 8);
 
         switch ($quadrant) {
             case 0:
@@ -337,7 +335,7 @@ class GeoHash
      * @param string $hash
      * @param string $direction one of self::NORTH, self::SOUTH, self::EAST, self::WEST
      *
-     * @return \BlueX\GeoHash\Source\GeoHashSet
+     * @return \BlueX\Geo\HashSet
      * @throws \GeoHash\Exception
      */
     public static function halve($hash, $direction)
@@ -362,7 +360,7 @@ class GeoHash
                 break;
         }
 
-        $region = new GeoHashSet();
+        $region = new HashSet();
 
         foreach ($set as $range) {
             $region->addRange($hash . self::encodeDigit($range[0]), $hash . self::encodeDigit($range[1]));
@@ -377,7 +375,7 @@ class GeoHash
      * @param string $hash
      * @param string $direction one of self::NORTHEAST, self::NORTHWEST, self::SOUTHEAST, self::SOUTHWEST
      *
-     * @return \BlueX\GeoHash\Source\GeoHashSet
+     * @return \BlueX\Geo\HashSet
      * @throws \GeoHash\Exception
      */
     public static function quarter($hash, $direction)
@@ -402,7 +400,7 @@ class GeoHash
                 break;
         }
 
-        $set = new GeoHashSet();
+        $set = new HashSet();
         $set->addRange($hash . self::encodeDigit($range[0]), $hash . self::encodeDigit($range[1]));
 
         return $set;

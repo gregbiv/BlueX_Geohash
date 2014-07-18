@@ -7,13 +7,13 @@
  * @author  Gregory Kornienko <gregbiv@gmail.com>
  * @license MIT
  */
-namespace BlueX\GeoHash\Source;
+namespace BlueX\Geo;
 
 /**
  * Circumscribes an area of the earth.  The edges are marked by a single
  * lat/long pair marking the north, south, east and west boundaries.
  */
-class GeoBox
+class Box
 {
     /**
      * @var float
@@ -36,8 +36,8 @@ class GeoBox
     public $west;
 
     /**
-     * @param \BlueX\GeoHash\Source\GeoPoint $p1
-     * @param \BlueX\GeoHash\Source\GeoPoint $p2
+     * @param \BlueX\Geo\Point $p1
+     * @param \BlueX\Geo\Point $p2
      */
     public function __construct($p1, $p2)
     {
@@ -49,46 +49,46 @@ class GeoBox
 
     /**
      * Returns the center point of this box.
-     * @return \BlueX\GeoHash\Source\GeoPoint
+     * @return \BlueX\Geo\Point
      */
     public function center()
     {
-        return new GeoPoint(($this->north + $this->south) / 2, ($this->east + $this->west) / 2);
+        return new Point(($this->north + $this->south) / 2, ($this->east + $this->west) / 2);
     }
 
     /**
      * Returns the northeast corner of the box.
-     * @return \BlueX\GeoHash\Source\GeoPoint
+     * @return \BlueX\Geo\Point
      */
     public function northeast()
     {
-        return new GeoPoint($this->north, $this->east);
+        return new Point($this->north, $this->east);
     }
 
     /**
      * Returns the northwest corner of the box.
-     * @return \BlueX\GeoHash\Source\GeoPoint
+     * @return \BlueX\Geo\Point
      */
     public function northwest()
     {
-        return new GeoPoint($this->north, $this->west);
+        return new Point($this->north, $this->west);
     }
 
     /**
      * Returns the southeast corner of the box.
-     * @return \BlueX\GeoHash\Source\GeoPoint
+     * @return \BlueX\Geo\Point
      */
     public function southeast()
     {
-        return new GeoPoint($this->south, $this->east);
+        return new Point($this->south, $this->east);
     }
 
     /**
      * Returns the southwest corner of the box.
-     * @return \BlueX\GeoHash\Source\GeoPoint
+     * @return \BlueX\Geo\Point
      */
     public function southwest()
     {
-        return new GeoPoint($this->south, $this->west);
+        return new Point($this->south, $this->west);
     }
 }

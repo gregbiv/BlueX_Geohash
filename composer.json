@@ -1,5 +1,5 @@
 {
-    "name": "gregbiv/BlueX_Geohash",
+    "name": "gregbiv/blue-x-geohash",
     "version": "0.1",
     "type": "library",
     "description": "A library of where in the world things are. Mostly this library is concerned with geohashes, which encode latitude/longitude pairs into scalar, and therefore index-friendly, values.",
@@ -24,6 +24,6 @@
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
-        "psr-0": { "BlueX\\GeoHash\\": "src/" }
+        "psr-0": { "BlueX\\Geo\\": "src/" }
     }
 }
