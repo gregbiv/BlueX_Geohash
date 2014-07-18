@@ -1,0 +1,29 @@
+{
+    "name": "gregbiv/BlueX_Geohash",
+    "version": "0.1",
+    "type": "library",
+    "description": "A library of where in the world things are. Mostly this library is concerned with geohashes, which encode latitude/longitude pairs into scalar, and therefore index-friendly, values.",
+    "keywords": [
+        "geohash"
+    ],
+    "homepage": "http://github.com/gregbiv/BlueX_Geohash",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Johnson"
+        },
+        {
+            "name": "Gregory Kornienko",
+            "email": "gregbiv@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": { "BlueX\\GeoHash\\": "src/" }
+    }
+}
