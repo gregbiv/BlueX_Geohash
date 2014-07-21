@@ -7,7 +7,7 @@ Mostly this library is concerned with geohashes, which encode latitude/longitude
 Requirements
 ------------
 
-* PHP *
+* PHP 5.3+
 * PSR-0 autoloading
 
 Documentation
