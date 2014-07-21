@@ -177,7 +177,7 @@ class Hash
      *
      * @param string $hash
      *
-     * @return Point
+     * @return \BlueX\Geo\Point
      */
     public static function decode($hash)
     {
@@ -222,7 +222,7 @@ class Hash
      * @param string $direction one of self::NORTH, self::SOUTH, self::EAST or self::WEST
      *
      * @return null|string
-     * @throws \GeoHash\Exception
+     * @throws \BlueX\Geo\Exception
      */
     public static function neighbor($hash, $direction)
     {
@@ -336,7 +336,7 @@ class Hash
      * @param string $direction one of self::NORTH, self::SOUTH, self::EAST, self::WEST
      *
      * @return \BlueX\Geo\HashSet
-     * @throws \GeoHash\Exception
+     * @throws \BlueX\Geo\Exception
      */
     public static function halve($hash, $direction)
     {
@@ -376,7 +376,7 @@ class Hash
      * @param string $direction one of self::NORTHEAST, self::NORTHWEST, self::SOUTHEAST, self::SOUTHWEST
      *
      * @return \BlueX\Geo\HashSet
-     * @throws \GeoHash\Exception
+     * @throws \BlueX\Geo\Exception
      */
     public static function quarter($hash, $direction)
     {
